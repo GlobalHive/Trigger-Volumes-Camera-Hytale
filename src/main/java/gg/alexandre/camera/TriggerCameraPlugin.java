@@ -1,0 +1,20 @@
+package gg.alexandre.camera;
+
+import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+
+import javax.annotation.Nonnull;
+
+public class TriggerCameraPlugin extends JavaPlugin {
+
+    public TriggerCameraPlugin(@Nonnull JavaPluginInit init) {
+        super(init);
+    }
+
+    @Override
+    protected void setup() {
+        TriggerVolumesPlugin.get().registerEffectType("Camera", CameraEffect.class, CameraEffect.CODEC);
+    }
+
+}
