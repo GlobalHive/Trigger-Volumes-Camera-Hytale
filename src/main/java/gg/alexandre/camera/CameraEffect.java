@@ -10,13 +10,13 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
 import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.PositionUtil;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class CameraEffect extends TriggerEffect {
 
@@ -35,6 +35,11 @@ public class CameraEffect extends TriggerEffect {
                     (e) -> e.absolute
             ).add()
             .append(
+                    new KeyedCodec<>("LookAtPlayer", Codec.BOOLEAN, false),
+                    (e, v) -> e.lookPlayer = v,
+                    (e) -> e.lookPlayer
+            ).add()
+            .append(
                     new KeyedCodec<>("Position", Vector3dUtil.CODEC, false),
                     (e, v) -> e.positionData = v,
                     (e) -> e.positionData
@@ -48,6 +53,7 @@ public class CameraEffect extends TriggerEffect {
 
     private boolean custom = true;
     private boolean absolute = false;
+    private boolean lookPlayer = false;
 
     private Vector3d positionData = new Vector3d();
     private Vector3d rotationData = new Vector3d();
@@ -66,6 +72,23 @@ public class CameraEffect extends TriggerEffect {
                         (float) Math.toRadians(rotationData.z)
                 );
 
+                if (lookPlayer) {
+                    TransformComponent transformComponent = store.getComponent(
+                            entityRef, TransformComponent.getComponentType()
+                    );
+
+                    if (transformComponent != null) {
+                        Vector3d pos = transformComponent.getPosition();
+
+                        Vector3d directionToPlayer = new Vector3d(pos).sub(positionData).normalize();
+
+                        float yaw = (float) (Math.atan2(directionToPlayer.x, directionToPlayer.z) + Math.PI);
+                        float pitch = (float) Math.asin(directionToPlayer.y);
+
+                        rotation = new Direction(yaw, pitch, rotation.roll);
+                    }
+                }
+
                 ServerCameraSettings settings = new ServerCameraSettings();
 
                 if (absolute) {
@@ -82,8 +105,8 @@ public class CameraEffect extends TriggerEffect {
                 settings.allowPitchControls = false;
                 settings.sendMouseMotion = false;
 
-                settings.positionLerpSpeed = 1.0F;
-                settings.rotationLerpSpeed = 1.0F;
+                settings.positionLerpSpeed = lookPlayer ? 0.2F : 1;
+                settings.rotationLerpSpeed = lookPlayer ? 0.2F : 1;
 
                 playerRef.getPacketHandler().write(
                         new SetServerCamera(ClientCameraView.Custom, true, settings)

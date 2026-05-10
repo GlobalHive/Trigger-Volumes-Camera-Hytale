@@ -1,4 +1,5 @@
 customUI.triggerVolumeEffectEditor.field.Camera.Custom = Custom
 customUI.triggerVolumeEffectEditor.field.Camera.Absolute = Absolute
+customUI.triggerVolumeEffectEditor.field.Camera.LookAtPlayer = Look at Player
 customUI.triggerVolumeEffectEditor.field.Camera.Position = Position
 customUI.triggerVolumeEffectEditor.field.Camera.Rotation = Rotation (degrees)

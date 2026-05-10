@@ -1,7 +1,7 @@
 {
     "Group": "Alexandre",
     "Name": "Trigger Volumes Camera",
-    "Version": "1.0.0",
+    "Version": "1.1.0",
     "Description": "Adds Camera effect to Trigger Volumes.",
     "Authors": [
         {
