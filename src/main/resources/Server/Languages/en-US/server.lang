@@ -1,5 +1,10 @@
 customUI.triggerVolumeEffectEditor.field.Camera.Custom = Custom
+customUI.triggerVolumeEffectEditor.field.Camera.Custom.tooltip = If enabled, the camera will use the custom settings below. If disabled, it will set the default first-person camera.
 customUI.triggerVolumeEffectEditor.field.Camera.Absolute = Absolute
+customUI.triggerVolumeEffectEditor.field.Camera.Absolute.tooltip = If enabled, the camera will use absolute coordinates. If disabled, it will use coordinates relative to the player.
 customUI.triggerVolumeEffectEditor.field.Camera.LookAtPlayer = Look at Player
+customUI.triggerVolumeEffectEditor.field.Camera.LookAtPlayer.tooltip = If enabled, the camera will always look at the player. If disabled, it will use the rotation specified in the Rotation field.
 customUI.triggerVolumeEffectEditor.field.Camera.Position = Position
+customUI.triggerVolumeEffectEditor.field.Camera.Position.tooltip = Position of the camera. X, Y, Z order.
 customUI.triggerVolumeEffectEditor.field.Camera.Rotation = Rotation (degrees)
+customUI.triggerVolumeEffectEditor.field.Camera.Rotation.tooltip = Rotation of the camera in degrees. Pitch, Yaw, Roll order.
