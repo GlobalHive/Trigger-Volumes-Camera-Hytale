@@ -108,13 +108,13 @@ public class CameraEffect extends TriggerEffect {
                 settings.positionLerpSpeed = lookPlayer ? 0.2F : 1;
                 settings.rotationLerpSpeed = lookPlayer ? 0.2F : 1;
 
-                playerRef.getPacketHandler().write(
+                playerRef.getPacketHandler().writeNoCache(
                         new SetServerCamera(ClientCameraView.Custom, true, settings)
                 );
             }
 
             if (!custom) {
-                playerRef.getPacketHandler().write(
+                playerRef.getPacketHandler().writeNoCache(
                         new SetServerCamera(ClientCameraView.FirstPerson, false, null)
                 );
             }
