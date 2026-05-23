@@ -105,8 +105,8 @@ public class CameraEffect extends TriggerEffect {
                 settings.allowPitchControls = false;
                 settings.sendMouseMotion = false;
 
-                settings.positionLerpSpeed = lookPlayer ? 0.2F : 1;
-                settings.rotationLerpSpeed = lookPlayer ? 0.2F : 1;
+                settings.positionLerpSpeed = 0.15F;
+                settings.rotationLerpSpeed = 0.15F;
 
                 playerRef.getPacketHandler().writeNoCache(
                         new SetServerCamera(ClientCameraView.Custom, true, settings)
