@@ -15,6 +15,6 @@
     "IncludesAssetPack": true,
     "Dependencies": {},
     "OptionalDependencies": {},
-    "ServerVersion": ">=0.5.0-pre.9.1",
+    "ServerVersion": ">=0.5.0",
     "Main": "gg.alexandre.camera.TriggerCameraPlugin"
 }
