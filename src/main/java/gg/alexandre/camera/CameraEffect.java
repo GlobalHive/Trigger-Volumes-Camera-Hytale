@@ -14,11 +14,16 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.PositionUtil;
+import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
+import java.util.logging.Level;
 
 public class CameraEffect extends TriggerEffect {
+
+    @Nonnull
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Nonnull
     public static final BuilderCodec<CameraEffect> CODEC = BuilderCodec.builder(
@@ -63,9 +68,14 @@ public class CameraEffect extends TriggerEffect {
         Store<EntityStore> store = context.getStore();
 
         PlayerRef playerRef = store.getComponent(entityRef, PlayerRef.getComponentType());
-        if (playerRef != null) {
+        if (playerRef == null) {
+            return;
+        }
+
+        try {
             if (custom) {
-                Position position = PositionUtil.toPositionPacket(new Vector3d(0, 1.6, 0).add(positionData));
+                Vector3d cameraOffset = new Vector3d(0, 1.6, 0).add(positionData);
+                Position position = PositionUtil.toPositionPacket(cameraOffset);
                 Direction rotation = new Direction(
                         (float) Math.toRadians(rotationData.y),
                         (float) Math.toRadians(rotationData.x),
@@ -78,14 +88,16 @@ public class CameraEffect extends TriggerEffect {
                     );
 
                     if (transformComponent != null) {
-                        Vector3d pos = transformComponent.getPosition();
+                        Vector3d playerPos = transformComponent.getPosition();
+                        Vector3d cameraPos = absolute ? new Vector3d(positionData) : new Vector3d(playerPos).add(positionData);
+                        Vector3d delta = new Vector3d(playerPos).sub(cameraPos);
 
-                        Vector3d directionToPlayer = new Vector3d(pos).sub(positionData).normalize();
-
-                        float yaw = (float) (Math.atan2(directionToPlayer.x, directionToPlayer.z) + Math.PI);
-                        float pitch = (float) Math.asin(directionToPlayer.y);
-
-                        rotation = new Direction(yaw, pitch, rotation.roll);
+                        if (delta.lengthSquared() > 1.0E-9) {
+                            Vector3d directionToPlayer = delta.normalize();
+                            float yaw = (float) (Math.atan2(directionToPlayer.x, directionToPlayer.z) + Math.PI);
+                            float pitch = (float) Math.asin(directionToPlayer.y);
+                            rotation = new Direction(yaw, pitch, rotation.roll);
+                        }
                     }
                 }
 
@@ -104,20 +116,20 @@ public class CameraEffect extends TriggerEffect {
                 settings.isFirstPerson = false;
                 settings.allowPitchControls = false;
                 settings.sendMouseMotion = false;
-
                 settings.positionLerpSpeed = 0.15F;
                 settings.rotationLerpSpeed = 0.15F;
 
                 playerRef.getPacketHandler().writeNoCache(
                         new SetServerCamera(ClientCameraView.Custom, true, settings)
                 );
-            }
-
-            if (!custom) {
+            } else {
+                // Match built-in reset behavior to reliably clear server-driven camera state.
                 playerRef.getPacketHandler().writeNoCache(
-                        new SetServerCamera(ClientCameraView.FirstPerson, false, null)
+                        new SetServerCamera(ClientCameraView.Custom, false, null)
                 );
             }
+        } catch (Exception exception) {
+            LOGGER.at(Level.WARNING).withCause(exception).log("Failed to execute camera trigger effect");
         }
     }
 
