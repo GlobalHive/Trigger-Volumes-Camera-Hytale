@@ -44,3 +44,8 @@ build/
 .kotlin
 devserver
 /.idea/
+bin/main/icon-256.png
+bin/main/manifest.json
+bin/main/gg/alexandre/camera/CameraEffect.class
+bin/main/gg/alexandre/camera/TriggerCameraPlugin.class
+bin/main/Server/Languages/en-US/server.lang
