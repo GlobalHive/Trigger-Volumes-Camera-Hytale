@@ -1,7 +1,7 @@
 {
     "Group": "Alexandre",
     "Name": "Trigger Volumes Camera",
-    "Version": "1.1.2",
+    "Version": "1.2.0",
     "Description": "Adds Camera effect to Trigger Volumes.",
     "Authors": [
         {
@@ -15,6 +15,6 @@
     "IncludesAssetPack": true,
     "Dependencies": {},
     "OptionalDependencies": {},
-    "ServerVersion": ">=0.6.0",
+    "ServerVersion": ">=0.7.0 <0.8.0",
     "Main": "gg.alexandre.camera.TriggerCameraPlugin"
 }
